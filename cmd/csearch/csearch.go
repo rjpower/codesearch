@@ -13,8 +13,8 @@ import (
 	"runtime/pprof"
 	"strings"
 
-	"code.google.com/p/codesearch/index"
-	"code.google.com/p/codesearch/regexp"
+	"github.com/rjpower/codesearch/index"
+	"github.com/rjpower/codesearch/regexp"
 )
 
 var usageMessage = `usage: csearch [-c] [-f fileregexp] [-h] [-i] [-l] [-n] regexp

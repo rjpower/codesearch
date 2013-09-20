@@ -13,7 +13,7 @@ import (
 	"strings"
 	"unsafe"
 
-	"code.google.com/p/codesearch/sparse"
+	"github.com/rjpower/codesearch/sparse"
 )
 
 // Index writing.  See read.go for details of on-disk format.
@@ -112,6 +112,7 @@ func (ix *IndexWriter) AddFile(name string) {
 	}
 
 	defer f.Close()
+
 	if strings.HasSuffix(name, ".gz") {
 		log.Printf("Opening gzip... %s", name)
 		gz_f, err := gzip.NewReader(f)
