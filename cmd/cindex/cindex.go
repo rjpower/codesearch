@@ -123,6 +123,7 @@ func main() {
 
 	ix := index.Create(file)
 	ix.Verbose = *verboseFlag
+	ix.LogSkip = *verboseFlag
 	ix.AddPaths(args)
 	for _, arg := range args {
 		log.Printf("index %s", arg)
@@ -136,6 +137,7 @@ func main() {
 					return nil
 				}
 			}
+
 			if err != nil {
 				log.Printf("%s: %s", path, err)
 				return nil

@@ -5,6 +5,7 @@
 package index
 
 import (
+	"compress/gzip"
 	"io"
 	"io/ioutil"
 	"log"
@@ -109,8 +110,20 @@ func (ix *IndexWriter) AddFile(name string) {
 		log.Print(err)
 		return
 	}
+
 	defer f.Close()
-	ix.Add(name, f)
+	if strings.HasSuffix(name, ".gz") {
+		log.Printf("Opening gzip... %s", name)
+		gz_f, err := gzip.NewReader(f)
+		if err != nil {
+			log.Printf("Error: %s", err)
+			return
+		}
+		defer gz_f.Close()
+		ix.Add(name, gz_f)
+	} else {
+		ix.Add(name, f)
+	}
 }
 
 // Add adds the file f to the index under the given name.
@@ -171,12 +184,12 @@ func (ix *IndexWriter) Add(name string, f io.Reader) {
 			linelen = 0
 		}
 	}
-	if ix.trigram.Len() > maxTextTrigrams {
-		if ix.LogSkip {
-			log.Printf("%s: too many trigrams, probably not text, ignoring\n", name)
-		}
-		return
-	}
+	// if ix.trigram.Len() > maxTextTrigrams {
+	//	if ix.LogSkip {
+	//		log.Printf("%s: too many trigrams, probably not text, ignoring\n", name)
+	//	}
+	//	return
+	// }
 	ix.totalBytes += n
 
 	if ix.Verbose {

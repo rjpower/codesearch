@@ -5,11 +5,13 @@
 package main
 
 import (
+	"compress/gzip"
 	"flag"
 	"fmt"
 	"log"
 	"os"
 	"runtime/pprof"
+	"strings"
 
 	"code.google.com/p/codesearch/index"
 	"code.google.com/p/codesearch/regexp"
@@ -132,7 +134,13 @@ func Main() {
 
 	for _, fileid := range post {
 		name := ix.Name(fileid)
-		g.File(name)
+		if strings.HasSuffix(name, ".gz") {
+			f, _ := os.Open(name)
+			gz_f, _ := gzip.NewReader(f)
+			g.Reader(gz_f, name)
+		} else {
+			g.File(name)
+		}
 	}
 
 	matches = g.Match
